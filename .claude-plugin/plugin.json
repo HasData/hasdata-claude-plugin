@@ -1,0 +1,12 @@
+{
+    "name": "hasdata",
+    "description": "Real-time structured data from Google, Amazon, Zillow, Maps, and 40+ other sources — plus generic URL scraping into HTML, markdown, or AI-extracted JSON.",
+    "version": "0.1.0",
+    "author": {
+        "name": "HasData",
+        "url": "https://hasdata.com"
+    },
+    "homepage": "https://hasdata.com",
+    "repository": "https://github.com/hasdata/hasdata-claude-plugin",
+    "skills": ["./skills/hasdata-cli"]
+}
