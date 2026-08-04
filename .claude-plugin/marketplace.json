@@ -2,14 +2,17 @@
     "name": "hasdata",
     "owner": {
         "name": "HasData",
+        "email": "info@hasdata.com",
         "url": "https://hasdata.com"
     },
     "plugins": [
         {
             "name": "hasdata",
             "source": "./",
-            "description": "Real-time structured data from Google, Amazon, Zillow, Maps, and 40+ other sources — plus generic URL scraping into HTML, markdown, or AI-extracted JSON.",
-            "skills": ["./skills/hasdata-cli"]
+            "description": "Real-time structured data from Google, Amazon, Zillow, Maps, and 40+ other sources, plus generic URL scraping into HTML, markdown, or AI-extracted JSON.",
+            "license": "MIT",
+            "homepage": "https://hasdata.com",
+            "skills": "./skills/"
         }
     ]
 }

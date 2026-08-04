@@ -1,7 +1,7 @@
 ---
 name: hasdata-maps
 description: |
-  Google Maps data — find local businesses by query and location, pull a place's full profile (address, phone, website, hours, ratings), get reviews and photos. Use this skill when the user wants local business info, says "find restaurants in", "Google Maps for X near Y", "get reviews for this place", "phone number for", "address of", "businesses near me", "what's open in", "photos of this restaurant", or otherwise needs structured local-business data. Returns JSON with names, addresses, phones, websites, ratings, GPS coordinates — no scraping needed. Use this instead of generic web-scraping for Google Maps URLs.
+  Google Maps data — find local businesses by query and location, pull a place's full profile (address, phone, website, hours, ratings), get reviews, photos, and the posts a business publishes on its listing. Use this skill when the user wants local business info, says "find restaurants in", "Google Maps for X near Y", "get reviews for this place", "phone number for", "address of", "businesses near me", "what's open in", "photos of this restaurant", "any offers from this place", "what has this business posted", or otherwise needs structured local-business data. Returns JSON with names, addresses, phones, websites, ratings, GPS coordinates — no scraping needed. Use this instead of generic web-scraping for Google Maps URLs.
 allowed-tools:
   - Bash(hasdata *)
 ---
@@ -28,6 +28,7 @@ For non-Maps "what does X website look like" / general web search, use [hasdata-
 | `google-maps-reviews`                | Reviews for a place (by place ID or data ID)                        | 5    |
 | `google-maps-contributor-reviews`    | All reviews by a Google contributor                                 | 5    |
 | `google-maps-photos`                 | Photos for a place                                                  | 5    |
+| `google-maps-posts`                  | Posts a business published on its listing (offers, events, news)    | 10   |
 
 ## Quick start
 
@@ -46,6 +47,9 @@ hasdata google-maps-reviews --place-id "ChIJFU2bda4SM4cRKSCRyb6pOB8" --sort-by n
 
 # Photos for a place
 hasdata google-maps-photos --place-id "ChIJFU2bda4SM4cRKSCRyb6pOB8" --pretty -o .hasdata/photos.json
+
+# Posts a business published on its listing (offers, events, announcements)
+hasdata google-maps-posts --place-id "ChIJFU2bda4SM4cRKSCRyb6pOB8" --pretty -o .hasdata/posts.json
 
 # Pagination — use the next-page-token from the previous response
 hasdata google-maps-reviews --place-id "ChIJ..." --next-page-token "<token>" --pretty -o .hasdata/reviews-p2.json
@@ -87,6 +91,8 @@ hasdata google-maps-reviews --place-id "ChIJ..." --next-page-token "<token>" --p
   wait
   ```
 - For **review monitoring**, paginate with `--next-page-token` and sort `newestFirst`.
+- **`google-maps-posts`** takes either `--place-id` or `--data-id`, and costs 10 credits rather
+  than 5. Useful for tracking a competitor's promotions and events over time.
 
 ## Working with results
 

@@ -1,21 +1,22 @@
 ---
 name: hasdata-realestate
 description: |
-  Real-estate and short-term-rental data from Zillow, Redfin, and Airbnb. Use this skill when the user wants property listings, sold comps, rental searches, vacation rentals, or full property details. Triggers on "Zillow listings in", "homes for sale in", "houses for rent in", "Redfin search", "sold comps for", "Airbnb in", "vacation rentals", "Zillow property at <url>", "Airbnb listing <url>", or any real-estate / short-term rental request. Returns structured JSON — addresses, prices, beds/baths, square footage, photos, agent info — without HTML scraping. Supports rich filters (price range, beds, lot size, days on market, HOA, etc.).
+  Real-estate, short-term-rental, and hotel data from Zillow, Redfin, Airbnb, and Booking.com. Use this skill when the user wants property listings, sold comps, rental searches, vacation rentals, hotel availability and prices, or full property details. Triggers on "Zillow listings in", "homes for sale in", "houses for rent in", "Redfin search", "sold comps for", "Airbnb in", "vacation rentals", "hotels in", "where to stay in", "hotel prices for", "book a room in", "Zillow property at <url>", "Airbnb listing <url>", "Booking.com hotel <url>", or any real-estate, short-term rental, or accommodation request. Returns structured JSON — addresses, prices, beds/baths, square footage, photos, agent info, room availability — without HTML scraping. Supports rich filters (price range, beds, lot size, days on market, HOA, star rating, facilities, etc.).
 allowed-tools:
   - Bash(hasdata *)
 ---
 
-# hasdata real-estate APIs
+# hasdata real-estate and accommodation APIs
 
-Listings and full property details from Zillow, Redfin, and Airbnb.
+Listings and full property details from Zillow, Redfin, Airbnb, and Booking.com.
 
 ## When to use
 
 - User wants for-sale, for-rent, or sold listings in a city/area
-- User wants full details on a single Zillow / Redfin / Airbnb URL
+- User wants full details on a single Zillow / Redfin / Airbnb / Booking.com URL
 - User wants to filter by price, beds, baths, square footage, lot size, HOA, etc.
 - User wants short-term rentals (Airbnb) for specific dates and party size
+- User wants hotels for specific stay dates, with prices and room availability
 
 ## APIs in this group
 
@@ -23,10 +24,12 @@ Listings and full property details from Zillow, Redfin, and Airbnb.
 | ------------------ | ---------------------------------------------------------- | ---- |
 | `zillow-listing`   | Zillow search — for-sale / for-rent / sold by location     | 5    |
 | `zillow-property`  | Full Zillow property details by URL                        | 5    |
-| `redfin-listing`   | Redfin search by location with rich filters                | 5    |
+| `redfin-listing`   | Redfin search by zipcode with rich filters                 | 5    |
 | `redfin-property`  | Full Redfin property details by URL                        | 5    |
 | `airbnb-listing`   | Airbnb search by location, dates, party size               | 5    |
 | `airbnb-property`  | Full Airbnb listing details by URL                         | 5    |
+| `booking-search`   | Booking.com search by destination and stay dates           | 10   |
+| `booking-place`    | Full Booking.com property details plus available rooms     | 10   |
 
 ## Quick start
 
@@ -54,8 +57,8 @@ hasdata zillow-property --url "https://www.zillow.com/homedetails/..." --extract
 ### Redfin
 
 ```bash
-# For-sale, $500k–$800k, 3+ beds, 2+ baths
-hasdata redfin-listing --location "Seattle, WA" --beds-min 3 --baths "two" \
+# For-sale, 3+ beds, 2+ baths. Redfin searches by zipcode, not city name.
+hasdata redfin-listing --keyword "98101" --type forSale --beds-min 3 --baths "two" \
   --pretty -o .hasdata/redfin-seattle.json
 
 # Full property
@@ -77,6 +80,37 @@ hasdata airbnb-property --url "https://www.airbnb.com/rooms/7777642" --pretty -o
 hasdata airbnb-listing --location "Paris" --check-in "2026-06-01" --check-out "2026-06-05" \
   --next-page-token "<token>" --pretty -o .hasdata/airbnb-paris-p2.json
 ```
+
+### Booking.com
+
+```bash
+# Hotels in Paris for two adults, no children
+hasdata booking-search --keyword "Paris" \
+  --check-in-date "2026-09-10" --check-out-date "2026-09-14" \
+  --adults 2 --children 0 --rooms 1 \
+  --pretty -o .hasdata/booking-paris.json
+
+# Full property details plus available rooms for those dates
+hasdata booking-place --url "https://www.booking.com/hotel/fr/le-bristol-paris.html" \
+  --check-in-date "2026-09-10" --check-out-date "2026-09-14" \
+  --adults 2 --children 0 --rooms 1 \
+  --pretty -o .hasdata/booking-bristol.json
+```
+
+## Common Booking.com flags
+
+| Flag                     | Purpose                                                              |
+| ------------------------ | -------------------------------------------------------------------- |
+| `--keyword <query>`      | Required for search — city, region, neighborhood, or property name   |
+| `--url <url>`            | Required for `booking-place` — full booking.com property URL         |
+| `--check-in-date`        | Required — `YYYY-MM-DD`, must be in the future                        |
+| `--check-out-date`       | Required — `YYYY-MM-DD`, later than check-in                          |
+| `--adults <n>`           | Required — adult guests across all rooms                              |
+| `--children <n>`         | Required — pass `0`. Non-zero is broken in the CLI, see Tips           |
+| `--rooms <n>`            | Required — number of rooms to book                                    |
+| `--currency`             | Response currency, or `hotelCurrency` to keep each property's own     |
+| `--facilities`           | Filter by property facilities, values combined with OR               |
+| `--bedrooms` / `--bathrooms` | Minimum counts                                                    |
 
 ## Common Zillow flags
 
@@ -110,6 +144,15 @@ hasdata airbnb-listing --location "Paris" --check-in "2026-06-01" --check-out "2
 
 ## Tips
 
+- **Booking.com searches with children do not work in CLI v0.2.1.** `--children` is required
+  and must be `0`. Any non-zero value fails with `HTTP 422 childrenAges requiredWhen`, because
+  the CLI sends `childrenAgesJson` while the API expects `childrenAges` as a comma-separated
+  list. For a family stay, call the API directly until the CLI is fixed:
+  `https://api.hasdata.com/scrape/booking/search?...&children=2&childrenAges=3,7`
+- **Booking calls cost 10 credits**, double the Zillow / Redfin / Airbnb calls, so filter
+  before fanning out.
+- **Airbnb vs Booking.com:** Airbnb for whole-home and short-term rentals, Booking.com for
+  hotels and room-level availability. Query both when the user just says "where to stay".
 - **Search → property fan-out** is the standard pattern for getting full details on multiple listings:
   ```bash
   hasdata zillow-listing --keyword "Austin, TX" --type forSale --pretty -o .hasdata/zillow.json

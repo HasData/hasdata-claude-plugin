@@ -2,7 +2,7 @@
 
 Real-time web data inside Claude Code. Pull structured JSON from Google (SERP, Maps, News, Trends, Flights, Images, Events), Bing, Amazon, Shopify, Zillow, Redfin, Airbnb, Yelp, YellowPages, Indeed, Glassdoor, and Instagram — or scrape any URL into clean HTML, markdown, or AI-extracted fields.
 
-This plugin adds the [HasData CLI](https://github.com/hasdata/cli) as a set of skills, so Claude Code can answer questions and produce data that depends on the live web.
+This plugin adds the [HasData CLI](https://github.com/HasData/hasdata-cli) as a set of skills, so Claude Code can answer questions and produce data that depends on the live web.
 
 ## Features
 
@@ -33,10 +33,10 @@ claude --plugin-dir ./hasdata-claude-plugin
 The plugin shells out to the `hasdata` binary. Install it with the official one-liner:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/hasdata/cli/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/HasData/hasdata-cli/main/install.sh | sh
 ```
 
-Or download a release for your platform from <https://github.com/hasdata/cli/releases>.
+Or download a release for your platform from <https://github.com/HasData/hasdata-cli/releases>.
 
 ### 3. Authenticate
 
@@ -176,7 +176,7 @@ The plugin ships one umbrella skill (`hasdata`, always loaded) that routes to sp
 ## Resources
 
 - [HasData Documentation](https://docs.hasdata.com)
-- [HasData CLI Repository](https://github.com/hasdata/cli)
+- [HasData CLI Repository](https://github.com/HasData/hasdata-cli)
 - [API Reference](https://docs.hasdata.com/api-reference)
 - [Get an API key](https://app.hasdata.com/api-keys)
 

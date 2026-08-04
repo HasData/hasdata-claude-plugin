@@ -2,7 +2,7 @@
 name: hasdata-cli-installation
 description: |
   Install the official HasData CLI and configure authentication.
-  Releases: https://github.com/hasdata/cli/releases
+  Releases: https://github.com/HasData/hasdata-cli/releases
   Docs: https://docs.hasdata.com
   Get an API key: https://app.hasdata.com/api-keys
 ---
@@ -14,17 +14,18 @@ description: |
 The CLI is a single Go binary. Install with the official one-liner:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/hasdata/cli/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/HasData/hasdata-cli/main/install.sh | sh
 ```
 
-This places `hasdata` in `~/.local/bin` (or `/usr/local/bin` on systems where it's writable). Make sure that directory is in `PATH`.
+This places `hasdata` in `/usr/local/bin`, falling back to `~/.local/bin` when that is not writable. Make sure the directory is in `PATH`.
 
 ### Manual download
 
-Grab a release binary from https://github.com/hasdata/cli/releases for your platform, `chmod +x`, and move into `PATH`:
+Grab the archive for your platform from https://github.com/HasData/hasdata-cli/releases, extract it, and move the binary into `PATH`:
 
 ```bash
-mv hasdata-darwin-arm64 /usr/local/bin/hasdata
+tar -xzf hasdata_*.tar.gz
+mv hasdata /usr/local/bin/hasdata
 chmod +x /usr/local/bin/hasdata
 ```
 
