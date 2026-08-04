@@ -1,5 +1,6 @@
 {
     "name": "hasdata",
+    "description": "Official HasData plugins for Claude Code. Real-time web data from 40+ dedicated APIs covering search, e-commerce, real estate, local business, jobs, and travel, plus generic URL scraping.",
     "owner": {
         "name": "HasData",
         "email": "info@hasdata.com",
