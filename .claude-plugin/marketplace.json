@@ -10,7 +10,7 @@
         {
             "name": "hasdata",
             "source": "./",
-            "description": "Real-time structured data from Google, Amazon, Zillow, Maps, and 40+ other sources, plus generic URL scraping into HTML, markdown, or AI-extracted JSON.",
+            "description": "HasData turns Claude into a research, lead-generation, and data-extraction agent. 40+ dedicated APIs return ready-to-use structured JSON for search, e-commerce, real estate, local business, jobs, social, and travel, instead of one generic scraper you have to parse yourself.",
             "license": "MIT",
             "homepage": "https://hasdata.com",
             "skills": "./skills/"
