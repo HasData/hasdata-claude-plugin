@@ -1,12 +1,34 @@
 {
     "name": "hasdata",
-    "description": "Real-time structured data from Google, Amazon, Zillow, Maps, and 40+ other sources — plus generic URL scraping into HTML, markdown, or AI-extracted JSON.",
-    "version": "0.1.0",
+    "description": "Real-time structured data from Google, Amazon, Zillow, Maps, and 40+ other sources, plus generic URL scraping into HTML, markdown, or AI-extracted JSON.",
+    "version": "1.0.0",
     "author": {
         "name": "HasData",
+        "email": "info@hasdata.com",
         "url": "https://hasdata.com"
     },
     "homepage": "https://hasdata.com",
-    "repository": "https://github.com/hasdata/hasdata-claude-plugin",
-    "skills": ["./skills/hasdata-cli"]
+    "repository": "https://github.com/HasData/hasdata-claude-plugin",
+    "license": "MIT",
+    "keywords": [
+        "web-scraping",
+        "scraper",
+        "search",
+        "serp",
+        "serp-api",
+        "google-serp",
+        "google-maps",
+        "structured-data",
+        "data-extraction",
+        "lead-generation",
+        "real-estate",
+        "e-commerce",
+        "amazon",
+        "zillow",
+        "jobs",
+        "hasdata",
+        "claude-code",
+        "cli"
+    ],
+    "skills": "./skills/"
 }

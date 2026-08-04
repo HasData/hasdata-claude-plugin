@@ -74,7 +74,7 @@ hasdata shopify-collections --url "https://allbirds.com" --limit 50 --pretty -o 
 hasdata google-shopping --q "airpods pro 2" --pretty -o .hasdata/shopping-airpods.json
 
 # Immersive product detail (uses kgmid / product ID from a Google search)
-hasdata google-immersive-product --product-id "<id>" --pretty -o .hasdata/immersive.json
+hasdata google-immersive-product --page-token "<immersiveProductPageToken>" --pretty -o .hasdata/immersive.json
 ```
 
 ## Common Amazon flags
@@ -104,7 +104,8 @@ hasdata google-immersive-product --product-id "<id>" --pretty -o .hasdata/immers
 - **Shopify** doesn't need API keys per store — `shopify-products` works against any storefront's public `/products.json`. `--limit 250` is the max.
 - For **price tracking**, always pass `--delivery-zip` on Amazon — prices and Prime eligibility vary by location.
 - **Google Shopping** is best when comparing prices across retailers; **Amazon** alone is faster when you only need Amazon listings.
-- `google-immersive-product` requires a product ID from a Google search result — it's not directly user-facing.
+- `google-immersive-product` takes `--page-token`, the `immersiveProductPageToken` returned by
+  `google-shopping` — it's not directly user-facing, always chain it after a Shopping call.
 
 ## Working with results
 
