@@ -1,6 +1,11 @@
 ---
 description: Build a local lead list of businesses for a category in a city — name, phone, address, website, rating
 argument-hint: <category> in <city>  [n=N]   (e.g., "plumbers in Brooklyn, NY n=50")
+allowed-tools:
+  - Bash(hasdata *)
+  - Bash(jq *)
+  - Bash(wc *)
+  - Bash(mkdir *)
 ---
 
 # /hasdata:leads

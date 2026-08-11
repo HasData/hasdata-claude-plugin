@@ -8,13 +8,13 @@ This plugin adds the [HasData CLI](https://github.com/HasData/hasdata-cli) as a 
 
 - **Search** — Google SERP, News, AI Overviews, Trends, Events, Images, short videos; Bing SERP
 - **Scrape** — Any URL into HTML, text, markdown, or AI-extracted structured JSON, with screenshot capture and CSS / AI extraction rules
-- **Maps** — Google Maps place search, full place profiles, reviews, photos
+- **Maps** — Google Maps place search, full place profiles, reviews, photos, posts
 - **E-commerce** — Amazon (search, product, seller), Shopify (catalog, collections), Google Shopping
 - **Real estate** — Zillow / Redfin listings + property details, Airbnb search + listings
 - **Jobs** — Indeed and Glassdoor search + single-listing details
 - **Business directories** — Yelp and YellowPages search + place profiles
-- **Social** — Instagram public profile data
-- **Travel** — Google Flights search with rich filters
+- **Social** — Instagram public profiles; YouTube search, video and channel data, full transcripts
+- **Travel** — Google Flights search with rich filters, Booking.com search + property details
 
 40+ APIs return ready-to-use structured JSON — no HTML parsing, no selectors to maintain.
 
@@ -22,7 +22,24 @@ This plugin adds the [HasData CLI](https://github.com/HasData/hasdata-cli) as a 
 
 ### 1. Install the plugin
 
-In Claude Code, run `/plugin` and search for **hasdata**, then select it to install. Or load it locally during development:
+Two commands, same on macOS, Linux and Windows:
+
+```bash
+claude plugin marketplace add HasData/hasdata-claude-plugin
+claude plugin install hasdata@hasdata
+```
+
+If Claude Code is already running, `/reload-plugins` picks it up without a restart.
+
+The plugin is also published in Anthropic's community marketplace, which may lag this
+repository by a day:
+
+```bash
+claude plugin marketplace add anthropics/claude-plugins-community
+claude plugin install hasdata@claude-community
+```
+
+To work on the plugin itself, load it from a checkout instead:
 
 ```bash
 claude --plugin-dir ./hasdata-claude-plugin
@@ -123,13 +140,13 @@ Pull the Instagram profile for @hasdatadotcom
 | ------------ | --------------------------------------------------------------------------- |
 | Search       | `google-serp`, `google-serp-light`, `google-news`, `google-ai-mode`, `bing-serp`, `google-trends`, `google-events`, `google-images`, `google-short-videos` |
 | Scrape       | `web-scraping`                                                              |
-| Maps         | `google-maps`, `google-maps-place`, `google-maps-reviews`, `google-maps-contributor-reviews`, `google-maps-photos` |
+| Maps         | `google-maps`, `google-maps-place`, `google-maps-reviews`, `google-maps-contributor-reviews`, `google-maps-photos`, `google-maps-posts` |
 | E-commerce   | `amazon-search`, `amazon-product`, `amazon-seller`, `amazon-seller-products`, `shopify-products`, `shopify-collections`, `google-shopping`, `google-immersive-product` |
 | Real estate  | `zillow-listing`, `zillow-property`, `redfin-listing`, `redfin-property`, `airbnb-listing`, `airbnb-property` |
 | Jobs         | `indeed-listing`, `indeed-job`, `glassdoor-listing`, `glassdoor-job`        |
 | Business     | `yelp-search`, `yelp-place`, `yellowpages-search`, `yellowpages-place`      |
-| Social       | `instagram-profile`                                                         |
-| Flights      | `google-flights`                                                            |
+| Social       | `instagram-profile`, `youtube-search-api`, `youtube-video-api`, `youtube-channel-api`, `youtube-transcript-api` |
+| Travel       | `google-flights`, `booking-search`, `booking-place`                         |
 
 Run `hasdata --help` for the full list, or `hasdata <command> --help` for per-API flags.
 
@@ -167,7 +184,7 @@ Type any of these in Claude Code after the plugin is loaded:
 | ----------------------------------------- | ----------------------------------------------------------------------------------------- |
 | `/hasdata:leads <category> in <city>`     | Local lead list (Google Maps + YellowPages, paginated, deduped TSV)                       |
 | `/hasdata:price <product>`                | Cross-retailer price compare (Amazon + Google Shopping); appends to a price-history log + offers `/schedule` for monitoring |
-| `/hasdata:enrich <name and/or company>`   | Person / company enrichment via Google search dorks — emails, LinkedIn, GitHub, X, mentions |
+| `/hasdata:enrich <company, or contact + company>` | B2B enrichment from public sources — official site, LinkedIn, GitHub, X, Crunchbase. Business context only; it declines anything aimed at a private individual |
 
 ## Skills
 

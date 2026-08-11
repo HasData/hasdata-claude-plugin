@@ -1,6 +1,10 @@
 ---
 description: Compare prices for a product across Amazon and Google Shopping, with optional schedule for monitoring over time
 argument-hint: <product name>
+allowed-tools:
+  - Bash(hasdata *)
+  - Bash(jq *)
+  - Bash(mkdir *)
 ---
 
 # /hasdata:price

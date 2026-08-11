@@ -9,25 +9,51 @@ description: |
 
 # HasData CLI Installation
 
-## Quick Install
+## Install
 
-The CLI is a single Go binary. Install with the official one-liner:
+The CLI is a single Go binary. Pick the section matching the user's platform — check it
+before suggesting a command, because the one-liner below deliberately refuses to run on
+Windows.
+
+### macOS and Linux
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/HasData/hasdata-cli/main/install.sh | sh
 ```
 
-This places `hasdata` in `/usr/local/bin`, falling back to `~/.local/bin` when that is not writable. Make sure the directory is in `PATH`.
+This places `hasdata` in `/usr/local/bin`, falling back to `~/.local/bin` when that is not
+writable. Make sure the directory is in `PATH`.
 
-### Manual download
-
-Grab the archive for your platform from https://github.com/HasData/hasdata-cli/releases, extract it, and move the binary into `PATH`:
+Manual alternative — download the archive for the platform from
+https://github.com/HasData/hasdata-cli/releases, then:
 
 ```bash
 tar -xzf hasdata_*.tar.gz
 mv hasdata /usr/local/bin/hasdata
 chmod +x /usr/local/bin/hasdata
 ```
+
+### Windows
+
+The install script exits with an error on Windows; do not suggest it there. Download the
+`.zip` for the architecture — `hasdata_<version>_Windows_x86_64.zip` or `..._arm64.zip` —
+from https://github.com/HasData/hasdata-cli/releases, extract it, and put `hasdata.exe`
+on `PATH`. In PowerShell:
+
+```powershell
+Expand-Archive -Path .\hasdata_*_Windows_x86_64.zip -DestinationPath "$env:LOCALAPPDATA\hasdata" -Force
+[Environment]::SetEnvironmentVariable("PATH", "$env:PATH;$env:LOCALAPPDATA\hasdata", "User")
+```
+
+Open a new terminal afterwards so the updated `PATH` takes effect.
+
+### Any platform, with Go installed
+
+```bash
+go install github.com/HasData/hasdata-cli@latest
+```
+
+Puts the binary in `$(go env GOPATH)/bin`, which must be on `PATH`.
 
 ### Update
 
@@ -55,7 +81,13 @@ Alternatively, export it as an environment variable (no `configure` step needed)
 export HASDATA_API_KEY="YOUR-API-KEY"
 ```
 
-Add to `~/.zshrc` / `~/.bashrc` for persistence. The `--api-key` flag on any command overrides both the env var and the config file.
+Add to `~/.zshrc` / `~/.bashrc` for persistence. On Windows, the equivalent is:
+
+```powershell
+[Environment]::SetEnvironmentVariable("HASDATA_API_KEY", "YOUR-API-KEY", "User")
+```
+
+The `--api-key` flag on any command overrides both the env var and the config file.
 
 ## Verify
 
@@ -71,11 +103,22 @@ The install is healthy when both succeed and `install-check.json` contains organ
 
 ## Troubleshooting
 
-**`command not found: hasdata`** — `~/.local/bin` is not in `PATH`. Add it:
+**`command not found: hasdata`** — the install directory is not in `PATH`.
+
+macOS / Linux:
 
 ```bash
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
 ```
+
+Windows — confirm where it landed and whether the shell can see it:
+
+```powershell
+Get-Command hasdata
+```
+
+If that returns nothing, re-add the extract directory to `PATH` as shown above and open a
+new terminal.
 
 **`401 Unauthorized`** — API key is missing or invalid. Re-run `hasdata configure` or check `HASDATA_API_KEY`.
 

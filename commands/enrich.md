@@ -1,6 +1,15 @@
 ---
-description: Enrich a person or company with Google search dorks — emails, LinkedIn, GitHub, X (with follower counts), Crunchbase
-argument-hint: <name and/or company>  (e.g., "Roman Milyushkevich hasdata" or "Acme Corp")
+description: Enrich a company or a business contact from public sources — official site, LinkedIn, GitHub, X, Crunchbase
+argument-hint: <company, or contact plus their company>  (e.g., "Acme Corp" or "jane doe acme")
+allowed-tools:
+  - Bash(hasdata *)
+  - Bash(jq *)
+  - Bash(grep *)
+  - Bash(sed *)
+  - Bash(tr *)
+  - Bash(cut *)
+  - Bash(wc *)
+  - Bash(mkdir *)
 ---
 
 # /hasdata:enrich
@@ -8,6 +17,18 @@ argument-hint: <name and/or company>  (e.g., "Roman Milyushkevich hasdata" or "A
 Subject: **$ARGUMENTS**
 
 Find the canonical identity (knowledge graph, official site), then enrich with targeted `site:` dorks. **Goal: precision over recall.** It's better to return three confirmed signals than a dozen unverified ones.
+
+## Scope
+
+This is B2B enrichment over sources that are already public and indexed: company sites,
+LinkedIn, GitHub, X, Crunchbase. It reads search results — it does not query data brokers,
+breach dumps or any private source, and it collects nothing beyond what a person publishes
+in a professional capacity.
+
+Use it for companies and for business contacts in a business context. Decline requests that
+target a private individual, or that ask for home addresses, personal phone numbers, family
+details, location tracking or anything else outside a professional profile — say plainly that
+the command does not do that, and stop.
 
 ## Steps
 
@@ -18,13 +39,13 @@ Detect whether $ARGUMENTS is `Name + Company`, `Name only`, or `Company only`. S
 ```bash
 mkdir -p .hasdata/enrich
 slug=$(echo "$ARGUMENTS" | tr '[:upper:]' '[:lower:]' | sed -E 's|[^a-z0-9]+|-|g; s|^-||; s|-$||' | cut -c1-60)
-NAME="<quoted full name or empty>"      # e.g. '"Roman Milyushkevich"'
+NAME="<quoted full name or empty>"      # e.g. '"Jane Doe"'
 COMPANY="<company token or empty>"      # e.g. 'hasdata'
 ```
 
 ### 1a. Disambiguate before enriching (MANDATORY for name-only input)
 
-A name without a company is almost never unique. Names like "Nikita Naumov", "John Smith", "Maria Garcia" map to many real people, and dork results conflate their facts. **Do not enrich a name-only query directly.** Instead:
+A name without a company is almost never unique. Common names map to many real people, and dork results conflate their facts. **Do not enrich a name-only query directly.** Instead:
 
 If `NAME` is set and `COMPANY` is empty, run a **discovery pass** first:
 

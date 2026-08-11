@@ -1,7 +1,7 @@
 {
     "name": "hasdata",
-    "description": "HasData turns Claude into a research, lead-generation, and data-extraction agent. 40+ dedicated APIs return ready-to-use structured JSON for search, e-commerce, real estate, local business, jobs, social, and travel, instead of one generic scraper you have to parse yourself.",
-    "version": "1.0.0",
+    "description": "Real-time web data in Claude Code: 40+ dedicated APIs returning structured JSON for search, e-commerce, real estate, local business, jobs, travel and social, plus scraping any URL to markdown or AI-extracted fields. Ships slash commands for local lead lists, cross-retailer price comparison and B2B company enrichment.",
+    "version": "1.1.0",
     "author": {
         "name": "HasData",
         "email": "info@hasdata.com",
