@@ -67,17 +67,21 @@ hasdata redfin-property --url "https://www.redfin.com/IL/Chicago/.../home/126946
 
 ### Airbnb
 
+Stay dates are placeholders. Both Airbnb and Booking.com reject dates in the past,
+so resolve `<CHECK_IN>` / `<CHECK_OUT>` against today's date before running a
+command — never copy a literal date from this file.
+
 ```bash
 # Search by location, dates, guests
 hasdata airbnb-listing --location "Lisbon, Portugal" \
-  --check-in "2026-06-01" --check-out "2026-06-08" --adults 2 \
+  --check-in "<CHECK_IN>" --check-out "<CHECK_OUT>" --adults 2 \
   --pretty -o .hasdata/airbnb-lisbon.json
 
 # Full listing details
 hasdata airbnb-property --url "https://www.airbnb.com/rooms/7777642" --pretty -o .hasdata/airbnb-prop.json
 
 # Pagination
-hasdata airbnb-listing --location "Paris" --check-in "2026-06-01" --check-out "2026-06-05" \
+hasdata airbnb-listing --location "Paris" --check-in "<CHECK_IN>" --check-out "<CHECK_OUT>" \
   --next-page-token "<token>" --pretty -o .hasdata/airbnb-paris-p2.json
 ```
 
@@ -86,13 +90,13 @@ hasdata airbnb-listing --location "Paris" --check-in "2026-06-01" --check-out "2
 ```bash
 # Hotels in Paris for two adults, no children
 hasdata booking-search --keyword "Paris" \
-  --check-in-date "2026-09-10" --check-out-date "2026-09-14" \
+  --check-in-date "<CHECK_IN>" --check-out-date "<CHECK_OUT>" \
   --adults 2 --children 0 --rooms 1 \
   --pretty -o .hasdata/booking-paris.json
 
 # Full property details plus available rooms for those dates
 hasdata booking-place --url "https://www.booking.com/hotel/fr/le-bristol-paris.html" \
-  --check-in-date "2026-09-10" --check-out-date "2026-09-14" \
+  --check-in-date "<CHECK_IN>" --check-out-date "<CHECK_OUT>" \
   --adults 2 --children 0 --rooms 1 \
   --pretty -o .hasdata/booking-bristol.json
 ```

@@ -25,18 +25,22 @@ Real-time flight search via Google Flights.
 
 ## Quick start
 
+Dates below are placeholders. The API rejects a past `outboundDate` with
+`HTTP 422: afterOrEqual date validation failed`, so always resolve them against
+today's date before running a command — never copy a literal date from this file.
+
 ```bash
 # One-way SFO → JFK on a specific date
 hasdata google-flights \
   --departure-id "SFO" --arrival-id "JFK" \
-  --outbound-date "2026-06-15" \
+  --outbound-date "<OUTBOUND_DATE>" \
   --type "oneWay" \
   --pretty -o .hasdata/sfo-jfk.json
 
 # Round-trip with return
 hasdata google-flights \
   --departure-id "JFK" --arrival-id "LHR" \
-  --outbound-date "2026-07-10" --return-date "2026-07-20" \
+  --outbound-date "<OUTBOUND_DATE>" --return-date "<RETURN_DATE>" \
   --type "roundTrip" \
   --adults 2 \
   --pretty -o .hasdata/jfk-lhr-rt.json
@@ -44,21 +48,21 @@ hasdata google-flights \
 # Non-stop, max $800, sorted by price
 hasdata google-flights \
   --departure-id "LAX" --arrival-id "NRT" \
-  --outbound-date "2026-09-05" --return-date "2026-09-15" \
+  --outbound-date "<OUTBOUND_DATE>" --return-date "<RETURN_DATE>" \
   --stops "0" --max-price 800 --sort-by "price" \
   --pretty -o .hasdata/lax-nrt-nonstop.json
 
 # Business class, prefer fewer emissions
 hasdata google-flights \
   --departure-id "JFK" --arrival-id "CDG" \
-  --outbound-date "2026-08-01" --return-date "2026-08-08" \
+  --outbound-date "<OUTBOUND_DATE>" --return-date "<RETURN_DATE>" \
   --travel-class "Business" --less-emissions \
   --pretty -o .hasdata/jfk-cdg-biz.json
 
 # Specific airlines only
 hasdata google-flights \
   --departure-id "SEA" --arrival-id "HND" \
-  --outbound-date "2026-10-01" \
+  --outbound-date "<OUTBOUND_DATE>" \
   --include-airlines "DL,JL" \
   --pretty -o .hasdata/sea-hnd-dljl.json
 ```

@@ -30,13 +30,23 @@ claude --plugin-dir ./hasdata-claude-plugin
 
 ### 2. Install the HasData CLI
 
-The plugin shells out to the `hasdata` binary. Install it with the official one-liner:
+The plugin shells out to the `hasdata` binary.
+
+**macOS / Linux** — the official one-liner (verifies SHA-256 checksums, detects OS and arch):
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/HasData/hasdata-cli/main/install.sh | sh
 ```
 
-Or download a release for your platform from <https://github.com/HasData/hasdata-cli/releases>.
+**With Go:**
+
+```bash
+go install github.com/HasData/hasdata-cli@latest
+```
+
+**Windows** — the install script does not run here. Download the `.zip` for your architecture
+from the [releases page](https://github.com/HasData/hasdata-cli/releases), extract it, and add
+`hasdata.exe` to `%PATH%`.
 
 ### 3. Authenticate
 
@@ -74,7 +84,7 @@ Search Google for "best practices for React testing" and summarize the recommend
 
 **Scrape a page:**
 ```
-Scrape https://docs.hasdata.com/getting-started and extract the auth steps
+Scrape https://docs.hasdata.com/quickstart and extract the auth steps
 ```
 
 **Find local businesses:**
@@ -177,7 +187,7 @@ The plugin ships one umbrella skill (`hasdata`, always loaded) that routes to sp
 
 - [HasData Documentation](https://docs.hasdata.com)
 - [HasData CLI Repository](https://github.com/HasData/hasdata-cli)
-- [API Reference](https://docs.hasdata.com/api-reference)
+- [CLI documentation](https://docs.hasdata.com/cli)
 - [Get an API key](https://app.hasdata.com/api-keys)
 
 ## License
