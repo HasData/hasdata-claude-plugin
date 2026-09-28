@@ -16,7 +16,7 @@ This plugin adds the [HasData CLI](https://github.com/HasData/hasdata-cli) as a 
 - **Social** — Instagram public profiles; YouTube search, video and channel data, full transcripts
 - **Travel** — Google Flights search with rich filters, Booking.com search + property details
 
-40+ APIs return ready-to-use structured JSON — no HTML parsing, no selectors to maintain.
+Dedicated APIs return ready-to-use structured JSON, with no HTML parsing and no selectors to maintain.
 
 ## Installation
 

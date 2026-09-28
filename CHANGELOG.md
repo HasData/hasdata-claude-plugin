@@ -2,6 +2,18 @@
 
 All notable changes to this plugin. Versions follow [semver](https://semver.org/).
 
+## [1.1.1] — 2026-09-28
+
+### Fixed
+
+- The directory scan flagged the plugin for shipping no icon. Added `icon.svg`, a 512×512
+  mark, and pointed `plugin.json` at it.
+- `skills/hasdata-cli/rules/install.md` told Claude to pipe a remote install script into a
+  shell. That file is a rule Claude acts on rather than prose a person reads, so the command
+  ran on the user's machine and what it fetched was never part of the reviewed plugin. The
+  macOS and Linux section now installs from the release archive. The one-line script stays
+  documented in the CLI repository for anyone who wants it.
+
 ## [1.1.0] — 2026-08-11
 
 ### Fixed

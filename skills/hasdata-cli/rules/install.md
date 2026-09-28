@@ -11,27 +11,26 @@ description: |
 
 ## Install
 
-The CLI is a single Go binary. Pick the section matching the user's platform — check it
-before suggesting a command, because the one-liner below deliberately refuses to run on
-Windows.
+The CLI is a single Go binary. Pick the section matching the user's platform before
+suggesting a command: the steps differ between macOS, Linux and Windows.
 
 ### macOS and Linux
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/HasData/hasdata-cli/main/install.sh | sh
-```
-
-This places `hasdata` in `/usr/local/bin`, falling back to `~/.local/bin` when that is not
-writable. Make sure the directory is in `PATH`.
-
-Manual alternative — download the archive for the platform from
-https://github.com/HasData/hasdata-cli/releases, then:
+Download the archive for the platform from https://github.com/HasData/hasdata-cli/releases,
+then unpack it and put the binary on `PATH`:
 
 ```bash
 tar -xzf hasdata_*.tar.gz
 mv hasdata /usr/local/bin/hasdata
 chmod +x /usr/local/bin/hasdata
 ```
+
+Use `~/.local/bin` instead when `/usr/local/bin` is not writable, and make sure the directory
+is in `PATH`.
+
+The CLI repository also documents a one-line install script. Do not run it on the user's behalf:
+piping a remote script into a shell executes code that was never reviewed as part of this plugin.
+Point the user at it if they ask for it.
 
 ### Windows
 

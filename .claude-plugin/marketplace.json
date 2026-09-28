@@ -1,6 +1,6 @@
 {
     "name": "hasdata",
-    "description": "Official HasData plugins for Claude Code. Real-time web data from 40+ dedicated APIs covering search, e-commerce, real estate, local business, jobs, and travel, plus generic URL scraping.",
+    "description": "Official HasData plugins for Claude Code. Real-time web data from dedicated APIs covering search, e-commerce, real estate, local business, jobs, and travel, plus generic URL scraping.",
     "owner": {
         "name": "HasData",
         "email": "info@hasdata.com",
@@ -10,8 +10,8 @@
         {
             "name": "hasdata",
             "source": "./",
-            "description": "Real-time web data in Claude Code: 40+ dedicated APIs returning structured JSON for search, e-commerce, real estate, local business, jobs, travel and social, plus scraping any URL to markdown or AI-extracted fields. Ships slash commands for local lead lists, cross-retailer price comparison and B2B company enrichment.",
-            "version": "1.1.0",
+            "description": "Real-time web data in Claude Code, with dedicated APIs returning structured JSON for search, e-commerce, real estate, local business, jobs, travel and social, plus scraping any URL to markdown or AI-extracted fields. Ships slash commands for local lead lists, cross-retailer price comparison and B2B company enrichment.",
+            "version": "1.1.2",
             "author": {
                 "name": "HasData",
                 "email": "info@hasdata.com",
