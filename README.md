@@ -47,13 +47,23 @@ claude --plugin-dir ./hasdata-claude-plugin
 
 ### 2. Install the HasData CLI
 
-The plugin shells out to the `hasdata` binary.
+The plugin shells out to the `hasdata` binary, a single Go binary.
 
-**macOS / Linux** — the official one-liner (verifies SHA-256 checksums, detects OS and arch):
+**macOS / Linux.** Download the archive for your platform from the
+[releases page](https://github.com/HasData/hasdata-cli/releases), then unpack it and put the
+binary on `PATH`:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/HasData/hasdata-cli/main/install.sh | sh
+tar -xzf hasdata_*.tar.gz
+mv hasdata /usr/local/bin/hasdata
+chmod +x /usr/local/bin/hasdata
 ```
+
+Use `~/.local/bin` instead when `/usr/local/bin` is not writable, and make sure the directory
+is in `PATH`.
+
+The CLI repository also documents a one-line install script that verifies SHA-256 checksums and
+detects OS and architecture. Use it from there if you prefer it.
 
 **With Go:**
 
@@ -61,7 +71,7 @@ curl -fsSL https://raw.githubusercontent.com/HasData/hasdata-cli/main/install.sh
 go install github.com/HasData/hasdata-cli@latest
 ```
 
-**Windows** — the install script does not run here. Download the `.zip` for your architecture
+**Windows.** The install script does not run here. Download the `.zip` for your architecture
 from the [releases page](https://github.com/HasData/hasdata-cli/releases), extract it, and add
 `hasdata.exe` to `%PATH%`.
 
