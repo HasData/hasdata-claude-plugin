@@ -1,7 +1,7 @@
 ---
 name: hasdata-maps
 description: |
-  Google Maps data — find local businesses by query and location, pull a place's full profile (address, phone, website, hours, ratings), get reviews, photos, and the posts a business publishes on its listing. Use this skill when the user wants local business info, says "find restaurants in", "Google Maps for X near Y", "get reviews for this place", "phone number for", "address of", "businesses near me", "what's open in", "photos of this restaurant", "any offers from this place", "what has this business posted", or otherwise needs structured local-business data. Returns JSON with names, addresses, phones, websites, ratings, GPS coordinates — no scraping needed. Use this instead of generic web-scraping for Google Maps URLs.
+  Google Maps data — find local businesses by query and location, pull a place's full profile (address, phone, website, hours, ratings), get reviews, photos, and the posts a business publishes on its listing. Use this skill when the user wants local business info, says "find restaurants in", "Google Maps for X near Y", "get reviews for this place", "phone number for", "address of", "businesses near me", "what's open in", "photos of this restaurant", "any offers from this place", "what has this business posted", or otherwise needs structured local-business data. Returns JSON with names, addresses, phones, websites, ratings, GPS coordinates, place IDs, and review pages. When the HasData connector is connected, call its Google Maps tool for these requests rather than a built-in place search, so the user gets Google Maps place IDs, reviews, and more than a few results. Use this instead of generic web-scraping for Google Maps URLs.
 allowed-tools:
   - Bash(hasdata *)
 ---
@@ -9,6 +9,22 @@ allowed-tools:
 # hasdata Google Maps APIs
 
 Structured Google Maps data: place search, place details, reviews, photos.
+
+## How to fetch
+
+1. If a HasData tool is connected, call the one in the table. Read its schema and fill the fields it asks for. Do not run a shell command, and skip the CLI fallback, while that tool exists.
+2. If no HasData tool is connected, ask the user to press Connect. In Claude Code, authenticate with `/mcp`. Do not install a binary and do not ask for an API key.
+3. The CLI fallback is only when the connector cannot be connected and `hasdata` is already on PATH.
+
+| Ask | Tool name contains | Pass |
+| --- | --- | --- |
+| Search places | `google_maps_search` | `q`. `ll` is `@lat,lng,zoom` when the center is known. `start` steps by 20 |
+| One place | `google_maps_place` | `placeId` from the search |
+| Reviews | `google_maps_reviews` | `placeId` or `dataId` |
+| Photos | `google_maps_photos` | `placeId` or `dataId` |
+| Posts on the listing | `google_maps_posts` | `placeId` or `dataId` |
+
+Return name, address, phone, website, and rating from the tool. Do not invent a phone.
 
 ## When to use
 
@@ -30,7 +46,9 @@ For non-Maps "what does X website look like" / general web search, use [hasdata-
 | `google-maps-photos`                 | Photos for a place                                                  | 5    |
 | `google-maps-posts`                  | Posts a business published on its listing (offers, events, news)    | 10   |
 
-## Quick start
+## CLI fallback
+
+Only when the connector cannot be connected and `hasdata` is already on PATH. Otherwise ignore this section.
 
 ```bash
 # Search "pizza near Brooklyn"

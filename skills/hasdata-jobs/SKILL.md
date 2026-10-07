@@ -1,12 +1,27 @@
 ---
 name: hasdata-jobs
 description: |
-  Job listings and details from Indeed and Glassdoor. Use this skill when the user wants to search jobs by keyword and location, get details on a single job posting, build a hiring map for a role, or research roles at a company. Triggers on "find jobs", "Indeed search", "Glassdoor jobs", "<role> jobs in <city>", "open positions for", "job listings", "hiring for", "job posting at <url>", or any salary / company hiring research. Returns structured JSON — title, company, location, salary, posted date, URL — without HTML scraping.
+  Job listings and details from Indeed and Glassdoor. Use this skill when the user wants to search jobs by keyword and location, get details on a single job posting, build a hiring map for a role, or research roles at a company. Triggers on "find jobs", "Indeed search", "Glassdoor jobs", "ROLE jobs in CITY", "open positions for", "job listings", "hiring for", "job posting at URL", or any salary / company hiring research. Returns structured JSON — title, company, location, salary, posted date, URL — without HTML scraping.
 allowed-tools:
   - Bash(hasdata *)
 ---
 
 # hasdata jobs APIs
+
+## How to fetch
+
+1. If a HasData tool is connected, call the one in the table. Read its schema. Do not run a shell command, and skip the CLI fallback, while that tool exists.
+2. If no HasData tool is connected, ask the user to press Connect. In Claude Code, authenticate with `/mcp`. Do not install a binary and do not ask for an API key.
+3. The CLI fallback is only when the connector cannot be connected and `hasdata` is already on PATH.
+
+| Ask | Tool name contains | Pass |
+| --- | --- | --- |
+| Indeed search | `indeed_listing` | `keyword` and `location`. Ask if either is missing |
+| One Indeed job | `indeed_job` | `url` |
+| Glassdoor search | `glassdoor_listing` | `keyword` and `location` |
+| One Glassdoor job | `glassdoor_job` | `url` |
+
+Call both listing tools unless the user named one site. Include pay only when the tool returned it.
 
 Job search + single-listing details from Indeed and Glassdoor.
 
@@ -26,7 +41,9 @@ Job search + single-listing details from Indeed and Glassdoor.
 | `glassdoor-listing`  | Glassdoor search by keyword + location     | 5    |
 | `glassdoor-job`      | Single Glassdoor job by URL                | 5    |
 
-## Quick start
+## CLI fallback
+
+Only when the connector cannot be connected and `hasdata` is already on PATH. Otherwise ignore this section.
 
 ### Indeed
 

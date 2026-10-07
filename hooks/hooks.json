@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"HasData plugin: for live web data, call a connected HasData tool. If none is connected, ask the user to press Connect. Do not install a CLI, do not ask for an API key, and do not use WebSearch or WebFetch in place of a HasData tool.\""
+          }
+        ]
+      }
+    ]
+  }
+}

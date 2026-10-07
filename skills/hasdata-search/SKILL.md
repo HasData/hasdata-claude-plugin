@@ -1,7 +1,7 @@
 ---
 name: hasdata-search
 description: |
-  Real-time Google and Bing search results with structured JSON output. Use this skill whenever the user asks to search the web, find recent news, look up something on Google or Bing, get Google AI Overviews, check Google Trends, find events, or look up images. Triggers on "search Google for", "Bing search", "find news about", "what's trending", "Google AI Overview for", "find events in", "image search". Returns clean structured JSON — organic results, ads, knowledge graph, related searches — without any HTML scraping. Use this instead of WebSearch when the user wants raw search-engine data, time-filtered results, or location-specific SERPs.
+  Bing and DuckDuckGo results, and the index of the Google search skills. Use this skill for a Bing or DuckDuckGo query. For Google, switch to the matching skill: hasdata-serp for the full results page, hasdata-serp-light for a fast organic lookup, hasdata-ai-mode for Google AI Mode, hasdata-ai-overview for the AI Overview box, hasdata-news, hasdata-images, hasdata-trends, hasdata-shopping, hasdata-shorts, or hasdata-events. Triggers on "Bing search", "DuckDuckGo". Do not use this skill for a Google rank check or an AI Overview.
 allowed-tools:
   - Bash(hasdata *)
 ---
@@ -12,11 +12,15 @@ Structured JSON results from Google, Bing, Google News, Google AI Mode, Trends, 
 
 ## When to use
 
-- The user wants raw search-engine results (not just an answer)
-- They need news from a specific time window (`--tbs qdr:d|w|m|y`)
-- They need location- or device-specific SERPs (`--location`, `--gl`, `--device-type`)
-- They want Google AI Overviews, Trends data, image results, or events
-- They need to fan out from search results into other APIs (e.g., search → scrape each result)
+Google has its own skills. Load one of those instead of staying here:
+
+- Full results page, rankings, ads, local pack: [hasdata-serp](../hasdata-serp/SKILL.md)
+- Fast organic links for enrichment: [hasdata-serp-light](../hasdata-serp-light/SKILL.md)
+- Google AI Mode: [hasdata-ai-mode](../hasdata-ai-mode/SKILL.md)
+- The AI Overview box: [hasdata-ai-overview](../hasdata-ai-overview/SKILL.md)
+- News, images, trends, shopping, short videos, events: the skill with that name
+
+Stay here for Bing (`bing_serp`, field `q`) and DuckDuckGo (`duckduckgo_serp`, field `q`). DuckDuckGo region is `kl` in country-language form, such as us-en.
 
 ## APIs in this group
 
@@ -25,7 +29,7 @@ Structured JSON results from Google, Bing, Google News, Google AI Mode, Trends, 
 | `google-serp`              | Full Google SERP (organic, ads, KG, related)       | 10   |
 | `google-serp-light`        | Lighter / faster Google SERP                       | 5    |
 | `google-news`              | Google News results                                | 10   |
-| `google-ai-mode`           | Google AI Overview (AI-generated answer)           | 5    |
+| `google-ai-mode`           | Google AI Mode (not the AI Overview box)           | 5    |
 | `google-trends`            | Google Trends interest data                        | 5    |
 | `google-events`            | Google Events listings                             | 5    |
 | `google-images`            | Google Images results                              | 5    |
@@ -41,7 +45,7 @@ hasdata google-serp --q "best wireless earbuds 2026" --num 20 --pretty -o .hasda
 # News from the past day, sorted by date
 hasdata google-news --q "openai" --pretty -o .hasdata/news-openai.json
 
-# Google AI Overview
+# Google AI Mode. The AI Overview box is a different tool: hasdata-ai-overview
 hasdata google-ai-mode --q "what is retrieval augmented generation" --pretty -o .hasdata/ai-rag.json
 
 # Time-filtered SERP (past week)

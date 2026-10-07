@@ -8,6 +8,16 @@ allowed-tools:
 
 # hasdata Google Flights API
 
+## How to fetch
+
+1. If a HasData tool is connected whose name contains `google_travel_flights` and does not contain `deals`, call it. Read its schema. Do not run a shell command, and skip the CLI fallback, while that tool exists. Do not call a tool whose name contains `flights_deals`. That tool is not on the connector this plugin ships.
+2. If no HasData tool is connected, ask the user to press Connect. In Claude Code, authenticate with `/mcp`. Do not install a binary and do not ask for an API key.
+3. The CLI fallback is only when the connector cannot be connected and `hasdata` is already on PATH.
+
+Required: `departureId`, `arrivalId`, `outboundDate`. These are airport codes and `YYYY-MM-DD`. If any is missing, ask. Do not invent a date. `returnDate` is for a round trip. `travelClass`, `stops`, `adults`, and `maxPrice` only when the user named them.
+
+Hotels are [hasdata-hotels](../hasdata-hotels/SKILL.md). Return airline, price, stops, and duration from the tool.
+
 Real-time flight search via Google Flights.
 
 ## When to use
@@ -23,7 +33,9 @@ Real-time flight search via Google Flights.
 | ----------------- | --------------------------------------------------- | ---- |
 | `google-flights`  | Search Google Flights with full filter support      | 15   |
 
-## Quick start
+## CLI fallback
+
+Only when the connector cannot be connected and `hasdata` is already on PATH. Otherwise ignore this section.
 
 Dates below are placeholders. The API rejects a past `outboundDate` with
 `HTTP 422: afterOrEqual date validation failed`, so always resolve them against

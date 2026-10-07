@@ -1,14 +1,32 @@
 ---
 name: hasdata-ecommerce
 description: |
-  Structured product data from Amazon, Shopify stores, and Google Shopping. Use this skill when the user wants to find products, check prices, get product details, list a Shopify store's catalog, scrape an Amazon seller's products, compare prices across retailers, or pull immersive product data. Triggers on "find products on Amazon", "Amazon search for", "ASIN B0...", "Shopify products from", "this Shopify store", "Google Shopping for", "compare prices for", "what does this seller sell", "Amazon seller", or any e-commerce product / pricing request. Returns structured JSON — title, price, ratings, reviews, images, availability — without HTML scraping.
+  Amazon and Shopify product data. Use this skill for an Amazon search, an ASIN, an Amazon seller, or a Shopify catalog. Triggers on "find products on Amazon", "Amazon search for", "ASIN", "Shopify products from", "this Shopify store", "what does this seller sell". Google Shopping is hasdata-shopping. A cross-store price check is hasdata-prices. Walmart is hasdata-walmart.
 allowed-tools:
   - Bash(hasdata *)
 ---
 
 # hasdata e-commerce APIs
 
-Structured catalog and product data from Amazon, Shopify, and Google Shopping.
+Structured catalog and product data from Amazon and Shopify. Google Shopping is [hasdata-shopping](../hasdata-shopping/SKILL.md). A cross-store price check is [hasdata-prices](../hasdata-prices/SKILL.md).
+
+## How to fetch
+
+1. If a HasData tool is connected, call the one in the table. Read its schema. Do not run a shell command, and skip the CLI fallback, while that tool exists.
+2. If no HasData tool is connected, ask the user to press Connect. In Claude Code, authenticate with `/mcp`. Do not install a binary and do not ask for an API key.
+3. The CLI fallback is only when the connector cannot be connected and `hasdata` is already on PATH.
+
+| Ask | Tool name contains | Pass |
+| --- | --- | --- |
+| Search Amazon | `amazon_search` | `q` |
+| One Amazon product | `amazon_product` | `asin` |
+| Amazon reviews | `amazon_reviews` | `asin` |
+| Amazon seller | `amazon_seller` | `sellerId` |
+| That seller's products | `amazon_seller_products` | `sellerId` |
+| Shopify products | `shopify_products` | `url` of the store |
+| Shopify collections | `shopify_collections` | `url` of the store |
+
+`domain` is the Amazon site when the user names a country. `page` continues a search. Do not invent a price.
 
 ## When to use
 
@@ -16,6 +34,8 @@ Structured catalog and product data from Amazon, Shopify, and Google Shopping.
 - User wants to enumerate or filter a Shopify store's catalog or collections
 - User wants Google Shopping cross-retailer prices for a query
 - User wants the immersive-product detail card (Google's rich product view)
+
+Walmart is [hasdata-walmart](../hasdata-walmart/SKILL.md). A cross-store price check is [hasdata-prices](../hasdata-prices/SKILL.md).
 
 For non-platform URLs, use [hasdata-scrape](../hasdata-scrape/SKILL.md). For real-estate listings, jobs, or businesses, use the dedicated skill.
 
@@ -32,7 +52,9 @@ For non-platform URLs, use [hasdata-scrape](../hasdata-scrape/SKILL.md). For rea
 | `google-shopping`             | Google Shopping aggregated results (multi-retailer prices)       | 10   |
 | `google-immersive-product`    | Google's immersive product detail card                           | 5    |
 
-## Quick start
+## CLI fallback
+
+Only when the connector cannot be connected and `hasdata` is already on PATH. Otherwise ignore this section.
 
 ### Amazon
 

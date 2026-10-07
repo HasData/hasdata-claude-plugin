@@ -1,20 +1,22 @@
-# HasData Plugin for Claude Code
+# HasData
 
-Real-time web data inside Claude Code. Pull structured JSON from Google (SERP, Maps, News, Trends, Flights, Images, Events), Bing, Amazon, Shopify, Zillow, Redfin, Airbnb, Yelp, YellowPages, Indeed, Glassdoor, and Instagram — or scrape any URL into clean HTML, markdown, or AI-extracted fields.
+Real-time structured data in Claude: Google results, AI Mode, Maps, Amazon, Walmart, Zillow, Indeed, Yelp, YouTube, TikTok, flights, and any public URL as markdown.
 
-This plugin adds the [HasData CLI](https://github.com/HasData/hasdata-cli) as a set of skills, so Claude Code can answer questions and produce data that depends on the live web.
+On claude.ai and in Cowork, connect the HasData connector. That is OAuth. Do not install a CLI and do not paste an API key into the chat.
+
+The [HasData CLI](https://github.com/HasData/hasdata-cli) is an optional fallback for Claude Code, and only when that binary is already installed.
 
 ## Features
 
-- **Search** — Google SERP, News, AI Overviews, Trends, Events, Images, short videos; Bing SERP
+- **Search** — full Google results, fast organic results, Google AI Mode, and the AI Overview box as a separate step. Also News, Trends, Images, short videos, Shopping, Bing, and DuckDuckGo
 - **Scrape** — Any URL into HTML, text, markdown, or AI-extracted structured JSON, with screenshot capture and CSS / AI extraction rules
 - **Maps** — Google Maps place search, full place profiles, reviews, photos, posts
 - **E-commerce** — Amazon (search, product, seller), Shopify (catalog, collections), Google Shopping
 - **Real estate** — Zillow / Redfin listings + property details, Airbnb search + listings
 - **Jobs** — Indeed and Glassdoor search + single-listing details
 - **Business directories** — Yelp and YellowPages search + place profiles
-- **Social** — Instagram public profiles; YouTube search, video and channel data, full transcripts
-- **Travel** — Google Flights search with rich filters, Booking.com search + property details
+- **Social** — Instagram profiles and posts, YouTube including transcripts, TikTok, and a public Facebook profile
+- **Travel** — Google Flights. Hotels are Google Hotels and Booking.com, separate from home listings
 
 Dedicated APIs return ready-to-use structured JSON, with no HTML parsing and no selectors to maintain.
 
@@ -45,9 +47,9 @@ To work on the plugin itself, load it from a checkout instead:
 claude --plugin-dir ./hasdata-claude-plugin
 ```
 
-### 2. Install the HasData CLI
+### 2. Optional: the HasData CLI, Claude Code only
 
-The plugin shells out to the `hasdata` binary, a single Go binary.
+Skip this on claude.ai and in Cowork. The plugin does not require the binary. Use it only when the HasData connector cannot be connected and you already want a local `hasdata` command.
 
 **macOS / Linux.** Download the archive for your platform from the
 [releases page](https://github.com/HasData/hasdata-cli/releases), then unpack it and put the
@@ -193,21 +195,46 @@ Type any of these in Claude Code after the plugin is loaded:
 | Command                                   | What it does                                                                              |
 | ----------------------------------------- | ----------------------------------------------------------------------------------------- |
 | `/hasdata:leads <category> in <city>`     | Local lead list (Google Maps + YellowPages, paginated, deduped TSV)                       |
-| `/hasdata:price <product>`                | Cross-retailer price compare (Amazon + Google Shopping); appends to a price-history log + offers `/schedule` for monitoring |
+| `/hasdata:price <product>`                | Cross-retailer price compare (Amazon, Walmart, Google Shopping)                            |
 | `/hasdata:enrich <company, or contact + company>` | B2B enrichment from public sources — official site, LinkedIn, GitHub, X, Crunchbase. Business context only; it declines anything aimed at a private individual |
+| `/hasdata:search <query>`                 | Fast Google organic results                                                                 |
+| `/hasdata:serp <query>`                   | Full Google results page for a rank check                                                   |
+| `/hasdata:ai <query>`                     | Google AI Mode answer                                                                       |
+| `/hasdata:news <topic>`                   | Google News headlines                                                                      |
+| `/hasdata:transcript <YouTube URL or id>` | YouTube transcript, then a short summary                                                   |
+| `/hasdata:hotels <city and dates>`        | Hotel prices from Google Hotels and Booking.com                                            |
+| `/hasdata:reviews <place or product>`     | Reviews from Maps, Yelp, Amazon, or Walmart                                                |
+| `/hasdata:jobs <role and city>`           | Indeed and Glassdoor listings                                                              |
 
 ## Skills
 
 The plugin ships one umbrella skill (`hasdata`, always loaded) that routes to specialized skills loaded on demand:
 
-- `hasdata-search` — SERPs, news, AI Overviews, trends, events, images
+- `hasdata-serp` — full Google results page: rankings, ads, local pack
+- `hasdata-serp-light` — fast Google organic results
+- `hasdata-ai-mode` — Google AI Mode
+- `hasdata-ai-overview` — the AI Overview box on a results page
+- `hasdata-shopping` — Google Shopping, immersive product, product panel
+- `hasdata-shorts` — Google short videos
+- `hasdata-events` — events from Google results
+- `hasdata-search` — Bing and DuckDuckGo
+- `hasdata-news` — Google News
+- `hasdata-images` — Google Images
+- `hasdata-trends` — Google Trends
+- `hasdata-scholar` — Google Scholar
 - `hasdata-scrape` — Web Scraping API
 - `hasdata-maps` — Google Maps places, reviews, photos
 - `hasdata-ecommerce` — Amazon, Shopify, Google Shopping
+- `hasdata-walmart` — Walmart search, product, reviews
+- `hasdata-prices` — price comparison across Amazon, Walmart, and Google Shopping
 - `hasdata-realestate` — Zillow, Redfin, Airbnb
+- `hasdata-hotels` — Google Hotels and Booking.com
 - `hasdata-jobs` — Indeed, Glassdoor
 - `hasdata-business` — Yelp, YellowPages
 - `hasdata-social` — Instagram
+- `hasdata-youtube` — YouTube search, video, channel, transcript
+- `hasdata-tiktok` — TikTok profile, posts, search, comments
+- `hasdata-facebook` — Facebook public profile
 - `hasdata-flights` — Google Flights
 
 ## Resources

@@ -1,22 +1,38 @@
 ---
 name: hasdata-realestate
 description: |
-  Real-estate, short-term-rental, and hotel data from Zillow, Redfin, Airbnb, and Booking.com. Use this skill when the user wants property listings, sold comps, rental searches, vacation rentals, hotel availability and prices, or full property details. Triggers on "Zillow listings in", "homes for sale in", "houses for rent in", "Redfin search", "sold comps for", "Airbnb in", "vacation rentals", "hotels in", "where to stay in", "hotel prices for", "book a room in", "Zillow property at <url>", "Airbnb listing <url>", "Booking.com hotel <url>", or any real-estate, short-term rental, or accommodation request. Returns structured JSON — addresses, prices, beds/baths, square footage, photos, agent info, room availability — without HTML scraping. Supports rich filters (price range, beds, lot size, days on market, HOA, star rating, facilities, etc.).
+  Homes and short-term rentals from Zillow, Redfin, and Airbnb. Use this skill for listings, sold comps, houses for rent, or one property URL. Triggers on "Zillow listings in", "homes for sale in", "houses for rent in", "Redfin search", "sold comps for", "Airbnb in", "vacation rentals". Hotels, Booking.com, and "where to stay" are hasdata-hotels, not this skill.
 allowed-tools:
   - Bash(hasdata *)
 ---
 
-# hasdata real-estate and accommodation APIs
+# hasdata real-estate APIs
 
-Listings and full property details from Zillow, Redfin, Airbnb, and Booking.com.
+Listings and property details from Zillow, Redfin, and Airbnb. Hotels and Booking.com are [hasdata-hotels](../hasdata-hotels/SKILL.md).
+
+## How to fetch
+
+1. If a HasData tool is connected, call the one in the table. Read its schema. Do not run a shell command, and skip the CLI fallback, while that tool exists. Do not call `api.hasdata.com` yourself.
+2. If no HasData tool is connected, ask the user to press Connect. In Claude Code, authenticate with `/mcp`. Do not install a binary and do not ask for an API key.
+3. The CLI fallback is only when the connector cannot be connected and `hasdata` is already on PATH.
+
+| Ask | Tool name contains | Pass |
+| --- | --- | --- |
+| Zillow search | `zillow_listing` | `keyword` and `type` (`forSale`, `forRent`, or `sold`) |
+| One Zillow home | `zillow_property` | `url` |
+| Redfin search | `redfin_listing` | `keyword` (a zip code) and `type` |
+| One Redfin home | `redfin_property` | `url` |
+| Airbnb search | `airbnb_listing` | `location`, `checkIn`, `checkOut`. Ask for dates if they are missing |
+| One Airbnb listing | `airbnb_property` | `url` |
+
+Do not set `extractAgentEmails` unless the user asked for the listing agent's public contact. Hotels are not this skill.
 
 ## When to use
 
-- User wants for-sale, for-rent, or sold listings in a city/area
-- User wants full details on a single Zillow / Redfin / Airbnb / Booking.com URL
-- User wants to filter by price, beds, baths, square footage, lot size, HOA, etc.
-- User wants short-term rentals (Airbnb) for specific dates and party size
-- User wants hotels for specific stay dates, with prices and room availability
+- User wants for-sale, for-rent, or sold listings in a city or zip code
+- User wants full details on a Zillow, Redfin, or Airbnb URL
+- User wants to filter by price, beds, baths, square footage, lot size, or HOA
+- User wants an Airbnb for specific dates and a party size
 
 ## APIs in this group
 
@@ -31,7 +47,9 @@ Listings and full property details from Zillow, Redfin, Airbnb, and Booking.com.
 | `booking-search`   | Booking.com search by destination and stay dates           | 10   |
 | `booking-place`    | Full Booking.com property details plus available rooms     | 10   |
 
-## Quick start
+## CLI fallback
+
+Only when the connector cannot be connected and `hasdata` is already on PATH. Otherwise ignore this section, including the Booking.com examples. Hotels are hasdata-hotels.
 
 ### Zillow
 
@@ -148,15 +166,7 @@ hasdata booking-place --url "https://www.booking.com/hotel/fr/le-bristol-paris.h
 
 ## Tips
 
-- **Booking.com searches with children do not work in CLI v0.2.1.** `--children` is required
-  and must be `0`. Any non-zero value fails with `HTTP 422 childrenAges requiredWhen`, because
-  the CLI sends `childrenAgesJson` while the API expects `childrenAges` as a comma-separated
-  list. For a family stay, call the API directly until the CLI is fixed:
-  `https://api.hasdata.com/scrape/booking/search?...&children=2&childrenAges=3,7`
-- **Booking calls cost 10 credits**, double the Zillow / Redfin / Airbnb calls, so filter
-  before fanning out.
-- **Airbnb vs Booking.com:** Airbnb for whole-home and short-term rentals, Booking.com for
-  hotels and room-level availability. Query both when the user just says "where to stay".
+- Hotels and Booking.com are [hasdata-hotels](../hasdata-hotels/SKILL.md). Do not call `api.hasdata.com` directly and do not send the user there to paste a key.
 - **Search → property fan-out** is the standard pattern for getting full details on multiple listings:
   ```bash
   hasdata zillow-listing --keyword "Austin, TX" --type forSale --pretty -o .hasdata/zillow.json

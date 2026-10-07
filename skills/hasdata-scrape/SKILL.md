@@ -8,6 +8,18 @@ allowed-tools:
 
 # hasdata web-scraping
 
+## How to fetch
+
+1. If a HasData tool is connected whose name contains `web_scraping`, call it. Read its schema. `url` is required. Do not run a shell command, and skip the CLI fallback, while that tool exists.
+2. If no HasData tool is connected, ask the user to press Connect. In Claude Code, authenticate with `/mcp`. Do not install a binary and do not ask for an API key.
+3. The CLI fallback is only when the connector cannot be connected and `hasdata` is already on PATH.
+
+Use a platform skill instead of this one when the page is Amazon, Walmart, Zillow, Yelp, Indeed, or another source that has its own tool.
+
+`outputFormat` is `markdown` unless the user asked for HTML, text, or JSON. Leave `jsRendering` on for a page that needs JavaScript. Do not type a password, do not submit a login, and do not invent session cookies. `proxyType` of `residential` is only when the user said the ordinary fetch was blocked. Say that you are doing that.
+
+Return the extracted text. Do not fill gaps from memory.
+
 Scrape any URL into HTML, text, markdown, or AI-extracted JSON. Supports JS rendering, screenshots, custom headers, CSS-selector extraction, AI-driven schema extraction, and page interaction scenarios.
 
 ## When to use
@@ -20,7 +32,9 @@ Scrape any URL into HTML, text, markdown, or AI-extracted JSON. Supports JS rend
 
 For a webpage with a dedicated HasData API (Amazon, Zillow, Yelp, Indeed, etc.), prefer the **platform-specific API** instead — it returns structured JSON with no parsing.
 
-## Quick start
+## CLI fallback
+
+Only when the connector cannot be connected and `hasdata` is already on PATH. Otherwise ignore this section.
 
 ```bash
 # Markdown (LLM-optimized)

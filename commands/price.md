@@ -1,79 +1,28 @@
 ---
-description: Compare prices for a product across Amazon and Google Shopping, with optional schedule for monitoring over time
-argument-hint: <product name>
+description: Compare live prices for one product on Amazon, Walmart, and Google Shopping
+argument-hint: product name
 allowed-tools:
   - Bash(hasdata *)
-  - Bash(jq *)
-  - Bash(mkdir *)
 ---
 
 # /hasdata:price
 
 Product: **$ARGUMENTS**
 
-## Steps
+## Connector
 
-1. **Search Amazon** sorted by rating, top 10:
+If HasData tools are connected, call all three and stop. Do not run a shell command. Do not promise a price history file or a schedule.
 
-   ```bash
-   mkdir -p .hasdata/price-history
-   stamp=$(date +%Y%m%d-%H%M%S)
-   slug=$(echo "$ARGUMENTS" | tr '[:upper:]' '[:lower:]' | sed -E 's|[^a-z0-9]+|-|g; s|^-||; s|-$||' | cut -c1-60)
+| Store | Tool name contains | Pass |
+| --- | --- | --- |
+| Amazon | `amazon_search` | the product name |
+| Walmart | `walmart_search` | `q` |
+| Google Shopping | `google_serp_shopping` | `q` |
 
-   hasdata amazon-search --q "$ARGUMENTS" --sort-by avgCustomerReview \
-     --pretty -o ".hasdata/price-history/$slug-amazon-$stamp.json"
-   ```
+Reply with a table: store, title, price, link. Name the cheapest row among prices the tools actually returned. If a store returned nothing, say so.
 
-2. **Search Google Shopping** for cross-retailer prices:
+If no HasData tool is connected, ask the user to press Connect. In Claude Code, authenticate with `/mcp`. Do not install a binary and do not ask for an API key.
 
-   ```bash
-   hasdata google-shopping --q "$ARGUMENTS" \
-     --pretty -o ".hasdata/price-history/$slug-shopping-$stamp.json"
-   ```
+## CLI fallback
 
-3. **Extract a comparable list** from both sources with `jq`:
-
-   ```bash
-   echo "=== Amazon (top 10 by rating) ==="
-   jq -r '.products[0:10] | .[] | "\(.title)\t$\(.price.value // "n/a")\t\(.rating // "n/a")★\t\(.reviewsCount // 0) reviews\t\(.asin)"' \
-     ".hasdata/price-history/$slug-amazon-$stamp.json"
-
-   echo
-   echo "=== Google Shopping (cross-retailer) ==="
-   jq -r '.shoppingResults[0:15] | .[] | "\(.title)\t$\(.price)\t\(.source)"' \
-     ".hasdata/price-history/$slug-shopping-$stamp.json"
-   ```
-
-4. **Append a snapshot row** to a per-product price log so trends are visible across runs:
-
-   ```bash
-   {
-     amazon_min=$(jq '[.products[].price.value | numbers] | min // empty' ".hasdata/price-history/$slug-amazon-$stamp.json")
-     amazon_med=$(jq '[.products[].price.value | numbers] | sort | .[length/2|floor] // empty' ".hasdata/price-history/$slug-amazon-$stamp.json")
-     shop_min=$(jq '[.shoppingResults[].price | tonumber? ] | min // empty' ".hasdata/price-history/$slug-shopping-$stamp.json" 2>/dev/null)
-     shop_med=$(jq '[.shoppingResults[].price | tonumber? ] | sort | .[length/2|floor] // empty' ".hasdata/price-history/$slug-shopping-$stamp.json" 2>/dev/null)
-     printf "%s\t%s\t%s\t%s\t%s\n" "$stamp" "$amazon_min" "$amazon_med" "$shop_min" "$shop_med"
-   } >> ".hasdata/price-history/$slug.tsv"
-
-   echo
-   echo "=== History for '$ARGUMENTS' ==="
-   echo "timestamp	amazon_min	amazon_med	shopping_min	shopping_med"
-   tail -10 ".hasdata/price-history/$slug.tsv"
-   ```
-
-5. **Present a comparison table** for *this* run:
-   - **Cheapest overall** (across both sources) with retailer
-   - **Best-rated on Amazon** (top rating with ≥100 reviews)
-   - **Best value** (low price + high rating)
-   - **Price spread** — min / median / max across all retailers
-   - If `.hasdata/price-history/$slug.tsv` has 2+ rows, show the **delta vs previous snapshot** (Δ price for amazon_min and shopping_min)
-
-6. **Offer to schedule monitoring.** End the response with:
-
-   > Want me to `/schedule` `/hasdata:price $ARGUMENTS` to run on a recurring cadence (daily / weekly) so the price-history log keeps growing? Routine results land in `.hasdata/price-history/$slug.tsv` for trend analysis.
-
-   If the user says yes, suggest a cadence (`daily` for fast-moving categories like electronics, `weekly` for furniture / appliances) and invoke `/schedule`.
-
-## Cost per run
-
-5 (Amazon) + 10 (Shopping) = 15 credits.
+Only when the connector cannot be connected and `hasdata` is already on PATH: `hasdata amazon-search`, and `hasdata google-shopping`. A Walmart CLI command only if `hasdata --help` lists one. Do not install the CLI to reach this section.

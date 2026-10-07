@@ -1,39 +1,26 @@
 ---
 name: hasdata
 description: |
-  Pull structured data from Google (SERP, Maps, News, Trends, Flights, Images, Events), Bing, Amazon, Shopify, Zillow, Redfin, Airbnb, Yelp, YellowPages, Indeed, Glassdoor, and Instagram — or scrape any URL into HTML, markdown, or AI-extracted JSON — via the HasData CLI. Use this skill whenever the user wants real-time web data: search results, product listings, real-estate comps, vacation rentals, business contact details, job postings, social profiles, flight prices, or page content. Triggers on "search Google for", "scrape this URL", "find products on Amazon", "Zillow listings in", "Yelp reviews for", "jobs on Indeed", "Google Maps for", "flight prices", or any request that needs current data from a public website. Dedicated APIs return ready-to-use structured JSON, so use this instead of WebFetch/WebSearch for any task that needs external data, especially when the user names a specific source (Amazon, Maps, Zillow, etc.).
+  Live structured data from Google results, AI Mode, AI Overviews, Maps, News, Shopping, Amazon, Walmart, Zillow, Indeed, Yelp, YouTube, TikTok, and any public URL. Use this when the answer depends on current web data: rankings, AI Mode, prices, leads, jobs, hotels, or a page as markdown. Triggers on "search Google", "who ranks for", "Google AI Mode", "AI Overview", "Google Shopping", "Google Maps", "Yelp", "Indeed", "Zillow", "YouTube", "TikTok", "Walmart", "scrape this URL". Call the matching HasData tool. Do not use WebSearch or WebFetch instead.
 allowed-tools:
   - Bash(hasdata *)
 ---
 
-# HasData CLI
+# HasData
 
-Real-time web data via the HasData CLI. Returns structured JSON — or HTML/markdown for raw scraping — for APIs covering search engines, e-commerce, real estate, jobs, maps, social, and travel.
+Real-time web data for search engines, e-commerce, real estate, jobs, maps, social, and travel. Results are structured JSON, or HTML/markdown for raw scraping.
 
-Run `hasdata --help` to list all APIs, or `hasdata <api-slug> --help` for per-API flags.
+## How to fetch
 
-## Prerequisites
-
-Must be installed and authenticated. Verify with:
-
-```bash
-hasdata version
-```
-
-If the binary isn't found or isn't authenticated, see [rules/install.md](rules/install.md). For output handling and security guidelines, see [rules/security.md](rules/security.md).
-
-Run one small request to verify install + auth:
-
-```bash
-mkdir -p .hasdata
-hasdata google-serp --q "hello world" --pretty -o .hasdata/install-check.json
-```
+1. If HasData tools are connected, call the tool whose name matches the task. Names contain `google_serp`, `google_maps_search`, `web_scraping`, `amazon_search`, `zillow_listing`, `indeed_listing`, `yelp_search`, `google_travel_flights`, and the same pattern for the other sources. Do not run a shell command when such a tool exists. Do not install software.
+2. If no HasData tool is connected, ask the user to press Connect on the HasData connector for this chat, then wait. Do not download or install a binary inside the chat, and do not ask the user to paste an API key into the conversation. Use the `hasdata` command only when that connector cannot be connected and the binary is already on PATH. See [rules/install.md](rules/install.md) only in that case. Do not use WebFetch or WebSearch as a substitute.
+3. Output handling and security: [rules/security.md](rules/security.md).
 
 ## Workflow
 
 Pick the right API for the task. Most APIs return structured JSON — no HTML parsing needed.
 
-1. **Search the web** — `google-serp`, `google-news`, `google-ai-mode`, `bing-serp` for SERPs and news
+1. **Search the web** — full Google results are [hasdata-serp](../hasdata-serp/SKILL.md), AI Mode is [hasdata-ai-mode](../hasdata-ai-mode/SKILL.md), the AI Overview box is [hasdata-ai-overview](../hasdata-ai-overview/SKILL.md). `google-ai-mode` is not the Overview box.
 2. **Scrape any URL** — `web-scraping` for HTML/markdown/AI-extracted JSON from arbitrary pages
 3. **Find structured data on a known platform** — use the platform-specific API (Amazon, Zillow, etc.) instead of generic scraping
 4. **Discover places or businesses** — `google-maps`, `yelp-search`, `yellowpages-search`
@@ -43,7 +30,8 @@ Pick the right API for the task. Most APIs return structured JSON — no HTML pa
 | ------------------------------ | ------------------------------------------------------ | -------------- |
 | Google search results          | `google-serp` / `google-serp-light`                    | 10 / 5         |
 | Google news                    | `google-news`                                          | 10             |
-| Google AI Overviews            | `google-ai-mode`                                       | 5              |
+| Google AI Mode                 | `google-ai-mode`                                       | 5              |
+| Google AI Overview box         | no CLI command. Full SERP, then the tool whose name contains `google_serp_ai_overview` |    |
 | Bing search results            | `bing-serp`                                            | 10             |
 | Scrape any URL                 | `web-scraping`                                         | 10             |
 | Google Maps places             | `google-maps`, `google-maps-place`                     | 5              |
@@ -70,14 +58,31 @@ For detailed per-API reference, run `hasdata <command> --help`.
 
 ## When to Load References
 
-- **SERPs, news, AI Overviews, Trends, Events, Images** -> [hasdata-search](../hasdata-search/SKILL.md)
+- **Full Google results page (rankings, ads, local pack)** -> [hasdata-serp](../hasdata-serp/SKILL.md)
+- **Fast Google organic results** -> [hasdata-serp-light](../hasdata-serp-light/SKILL.md)
+- **Google AI Mode** -> [hasdata-ai-mode](../hasdata-ai-mode/SKILL.md)
+- **Google AI Overview box** -> [hasdata-ai-overview](../hasdata-ai-overview/SKILL.md)
+- **Google Shopping** -> [hasdata-shopping](../hasdata-shopping/SKILL.md)
+- **Google short videos** -> [hasdata-shorts](../hasdata-shorts/SKILL.md)
+- **Google events** -> [hasdata-events](../hasdata-events/SKILL.md)
+- **Bing, DuckDuckGo, and the older search index** -> [hasdata-search](../hasdata-search/SKILL.md)
 - **Scraping arbitrary URLs (HTML/markdown/JSON/AI extraction)** -> [hasdata-scrape](../hasdata-scrape/SKILL.md)
 - **Google Maps places, reviews, photos** -> [hasdata-maps](../hasdata-maps/SKILL.md)
 - **Amazon, Shopify, Google Shopping** -> [hasdata-ecommerce](../hasdata-ecommerce/SKILL.md)
 - **Zillow, Redfin, Airbnb listings/properties** -> [hasdata-realestate](../hasdata-realestate/SKILL.md)
 - **Indeed, Glassdoor jobs** -> [hasdata-jobs](../hasdata-jobs/SKILL.md)
 - **Yelp, YellowPages business search** -> [hasdata-business](../hasdata-business/SKILL.md)
-- **Instagram profile** -> [hasdata-social](../hasdata-social/SKILL.md)
+- **Instagram profile and posts** -> [hasdata-social](../hasdata-social/SKILL.md)
+- **YouTube search, video, channel, transcript** -> [hasdata-youtube](../hasdata-youtube/SKILL.md)
+- **TikTok profile, posts, search, comments** -> [hasdata-tiktok](../hasdata-tiktok/SKILL.md)
+- **Facebook public profile** -> [hasdata-facebook](../hasdata-facebook/SKILL.md)
+- **Google News** -> [hasdata-news](../hasdata-news/SKILL.md)
+- **Google Images** -> [hasdata-images](../hasdata-images/SKILL.md)
+- **Google Trends** -> [hasdata-trends](../hasdata-trends/SKILL.md)
+- **Google Scholar papers and citations** -> [hasdata-scholar](../hasdata-scholar/SKILL.md)
+- **Google Hotels and Booking.com** -> [hasdata-hotels](../hasdata-hotels/SKILL.md)
+- **Walmart search, product, reviews** -> [hasdata-walmart](../hasdata-walmart/SKILL.md)
+- **Price comparison across Amazon, Walmart, and Google Shopping** -> [hasdata-prices](../hasdata-prices/SKILL.md)
 - **Google Flights** -> [hasdata-flights](../hasdata-flights/SKILL.md)
 - **Install, auth, or setup problems** -> [rules/install.md](rules/install.md)
 - **Output handling and safe file-reading patterns** -> [rules/security.md](rules/security.md)

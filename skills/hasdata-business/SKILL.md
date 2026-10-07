@@ -1,12 +1,28 @@
 ---
 name: hasdata-business
 description: |
-  Local business directory data from Yelp and YellowPages — search, full place profiles, ratings, reviews, contact info. Use this skill when the user wants Yelp listings, YellowPages results, restaurant reviews on Yelp, plumbers / contractors / professionals near a city, business phone numbers and addresses, or full Yelp/YellowPages place profiles. Triggers on "Yelp search for", "Yelp reviews for", "find <category> on Yelp", "YellowPages for", "plumbers in <city>", "lawyers near", "lead list of <category>", "phone number for". Returns structured JSON. Use this when the user names Yelp or YellowPages specifically; for Google Maps data use hasdata-maps.
+  Local business directory data from Yelp and YellowPages — search, full place profiles, ratings, reviews, contact info. Use this skill when the user wants Yelp listings, YellowPages results, restaurant reviews on Yelp, plumbers / contractors / professionals near a city, business phone numbers and addresses, or full Yelp/YellowPages place profiles. Triggers on "Yelp search for", "Yelp reviews for", "find CATEGORY on Yelp", "YellowPages for", "plumbers in CITY", "lawyers near", "lead list of CATEGORY", "phone number for". Returns structured JSON. Use this when the user names Yelp or YellowPages specifically; for Google Maps data use hasdata-maps.
 allowed-tools:
   - Bash(hasdata *)
 ---
 
 # hasdata business APIs
+
+## How to fetch
+
+1. If a HasData tool is connected, call the one in the table. Read its schema. Do not run a shell command, and skip the CLI fallback, while that tool exists.
+2. If no HasData tool is connected, ask the user to press Connect. In Claude Code, authenticate with `/mcp`. Do not install a binary and do not ask for an API key.
+3. The CLI fallback is only when the connector cannot be connected and `hasdata` is already on PATH.
+
+| Ask | Tool name contains | Pass |
+| --- | --- | --- |
+| Yelp search | `yelp_search` | `keyword` and `location` |
+| One Yelp place | `yelp_place` | `placeId` from the search |
+| Yelp reviews | `yelp_reviews` | `placeId` |
+| YellowPages search | `yellowpages_search` | `keyword` and `location` |
+| One YellowPages place | `yellowpages_place` | `url` |
+
+A Google Maps phone or address is [hasdata-maps](../hasdata-maps/SKILL.md). A lead list from both Maps and YellowPages is the `leads` command. Do not invent a phone.
 
 Search and place profiles for Yelp and YellowPages.
 
@@ -26,7 +42,9 @@ Search and place profiles for Yelp and YellowPages.
 | `yellowpages-search`   | YellowPages search by keyword + location                 | 5    |
 | `yellowpages-place`    | Full YellowPages place profile (by URL)                  | 5    |
 
-## Quick start
+## CLI fallback
+
+Only when the connector cannot be connected and `hasdata` is already on PATH. Otherwise ignore this section.
 
 ### Yelp
 
